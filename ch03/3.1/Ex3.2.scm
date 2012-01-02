@@ -1,0 +1,18 @@
+(define (make-monitored f)
+  (define (in f times)
+    (define (mf x)
+      (cond ((eq? 'how-many-calls? x) times)
+	    ((eq? 'reset-count x) (set! times 0))
+	    (else (begin (set! times (+ times 1))
+			 (f x)))))
+    mf)
+  (in f 0))
+
+;;Test
+(define monitor (make-monitored square))
+(monitor 'how-many-calls?)
+(monitor 3)
+(monitor 2)
+(monitor 'how-many-calls?)
+(monitor 'reset-count)
+(monitor 'how-many-calls?)
